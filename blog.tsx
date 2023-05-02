@@ -40,6 +40,8 @@ import type {
 export { Fragment, h };
 
 const IS_DEV = Deno.args.includes("--dev") && "watchFs" in Deno;
+const PLAUSIBLE_ENABLED = Deno.env.get("PLAUSIBLE_ENABLED");
+const PLAUSIBLE_URL = Deno.env.get("PLAUSIBLE_URL");
 const POSTS = new Map<string, Post>();
 const HMR_SOCKETS: Set<WebSocket> = new Set();
 
@@ -314,11 +316,15 @@ export async function handler(
 
   const sharedHtmlOptions: HtmlOptions = {
     lang: blogState.lang ?? "en",
-    scripts: IS_DEV ? [{ src: "/hmr.js" }, { defer: true, src:"https://stats.jlcarveth.dev/js/script.js"}] : { defer: true, src:"https://stats.jlcarveth.dev/js/script.js"},
+    scripts: IS_DEV ? [{ src: "/hmr.js" }] : undefined,
     links: [
       { href: `${canonicalUrl}${new URL(req.url).pathname}`, rel: "canonical" },
     ],
   };
+
+  if (PLAUSIBLE_ENABLED) {
+    sharedHtmlOptions.scripts?.push({ defer: true, src:PLAUSIBLE_URL});
+  }
 
   if (typeof blogState.favicon === "string") {
     sharedHtmlOptions.links?.push({
