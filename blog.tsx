@@ -316,7 +316,7 @@ export async function handler(
 
   const sharedHtmlOptions: HtmlOptions = {
     lang: blogState.lang ?? "en",
-    scripts: IS_DEV ? [{ src: "/hmr.js" }] : undefined,
+    scripts: IS_DEV ? [{ src: "/hmr.js" }] : [],
     links: [
       { href: `${canonicalUrl}${new URL(req.url).pathname}`, rel: "canonical" },
     ],
@@ -325,7 +325,6 @@ export async function handler(
   if (PLAUSIBLE_ENABLED) {
     sharedHtmlOptions.scripts?.push({ defer: true, src:PLAUSIBLE_URL});
   }
-
   if (typeof blogState.favicon === "string") {
     sharedHtmlOptions.links?.push({
       href: blogState.favicon,
