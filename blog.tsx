@@ -314,7 +314,7 @@ export async function handler(
 
   const sharedHtmlOptions: HtmlOptions = {
     lang: blogState.lang ?? "en",
-    scripts: IS_DEV ? [{ src: "/hmr.js" }] : undefined,
+    scripts: IS_DEV ? [{ src: "/hmr.js" }, { defer: true, src:"https://stats.jlcarveth.dev/js/script.js"}] : { defer: true, src:"https://stats.jlcarveth.dev/js/script.js"},
     links: [
       { href: `${canonicalUrl}${new URL(req.url).pathname}`, rel: "canonical" },
     ],
